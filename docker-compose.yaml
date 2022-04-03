@@ -2,15 +2,16 @@ version: "3.9"
 
 services:
 
-  #node name must follow the pattern root dir + node number
+  # !!! node/folder names must follow the pattern root dir + node number
+
   ## INIT DATA DIR
   init-ledge:
     image: 'trapesys/polygon-ledge'
     volumes:
-      - ./node1:/node1
-      - ./node2:/node2
-      - ./node3:/node3
-      - ./node4:/node4
+      - node1:/node1
+      - node2:/node2
+      - node3:/node3
+      - node4:/node4
     networks: 
       - edge-nodes
     command: ["-mode","init"]
@@ -18,14 +19,14 @@ services:
   genesis-ledge:
     image: 'trapesys/polygon-ledge'
     volumes:
-      - ./node1:/node1
-      - ./node2:/node2
-      - ./node3:/node3
-      - ./node4:/node4
-      - ./genesis:/genesis
+      - node1:/node1
+      - node2:/node2
+      - node3:/node3
+      - node4:/node4
+      - genesis:/genesis
     networks: 
       - edge-nodes
-    command: ["-mode","genesis","-chain-name","zex-chain"]
+    command: ["-mode","genesis"]
     depends_on: 
       - "init-ledge"
   
@@ -35,8 +36,8 @@ services:
     image: '0xpolygon/polygon-edge'
     restart: on-failure
     volumes:
-      - ./node1:/data
-      - ./genesis:/genesis
+      - node1:/data
+      - genesis:/genesis
     networks: 
       - edge-nodes
     # ports:
@@ -49,8 +50,8 @@ services:
     image: '0xpolygon/polygon-edge'
     restart: on-failure
     volumes:
-      - ./node2:/data
-      - ./genesis:/genesis
+      - node2:/data
+      - genesis:/genesis
     networks: 
       - edge-nodes
     # ports:
@@ -63,8 +64,8 @@ services:
     image: '0xpolygon/polygon-edge'
     restart: on-failure
     volumes:
-      - ./node3:/data
-      - ./genesis:/genesis
+      - node3:/data
+      - genesis:/genesis
     networks: 
       - edge-nodes
     # ports:
@@ -77,8 +78,8 @@ services:
     image: '0xpolygon/polygon-edge'
     restart: on-failure
     volumes:
-      - ./node4:/data
-      - ./genesis:/genesis
+      - node4:/data
+      - genesis:/genesis
     networks: 
       - edge-nodes
     # ports:
@@ -96,10 +97,13 @@ services:
       - 80:8080
     networks: 
      - edge-nodes
-
  
 networks: 
   edge-nodes:
 
-      
-
+volumes:
+  node1:
+  node2:
+  node3:
+  node4:
+  genesis:
