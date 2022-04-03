@@ -1,0 +1,105 @@
+version: "3.9"
+
+services:
+
+  #node name must follow the pattern root dir + node number
+  ## INIT DATA DIR
+  init-ledge:
+    image: 'trapesys/polygon-ledge'
+    volumes:
+      - ./node1:/node1
+      - ./node2:/node2
+      - ./node3:/node3
+      - ./node4:/node4
+    networks: 
+      - edge-nodes
+    command: ["-mode","init"]
+## GENERATE GENESIS
+  genesis-ledge:
+    image: 'trapesys/polygon-ledge'
+    volumes:
+      - ./node1:/node1
+      - ./node2:/node2
+      - ./node3:/node3
+      - ./node4:/node4
+      - ./genesis:/genesis
+    networks: 
+      - edge-nodes
+    command: ["-mode","genesis","-chain-name","zex-chain"]
+    depends_on: 
+      - "init-ledge"
+  
+## RUN NODES
+## Nodes must have the same names as folders in init-legde and genesis-legde
+  node1:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - ./node1:/data
+      - ./genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10001:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node2:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - ./node2:/data
+      - ./genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10002:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node3:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - ./node3:/data
+      - ./genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10003:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node4:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - ./node4:/data
+      - ./genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10004:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
+  
+  proxy:
+    image: 'nginx:alpine'
+    restart: on-failure
+    volumes:
+      - ./nginx:/etc/nginx
+    ports: 
+      - 80:8080
+    networks: 
+     - edge-nodes
+
+ 
+networks: 
+  edge-nodes:
+
+      
+
