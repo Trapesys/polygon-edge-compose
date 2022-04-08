@@ -1,4 +1,4 @@
-#Polygon Edge docker-compose / docker-stack deployment
+# Polygon Edge docker-compose / docker-stack deployment
 
 ## Overview
 This docker compose file simplifies the deployment of [Polygon Edge](https://github.com/0xPolygon/polygon-edge) in containerized environment.
