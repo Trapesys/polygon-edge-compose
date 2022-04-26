@@ -12,9 +12,11 @@ services:
       - node2:/node2
       - node3:/node3
       - node4:/node4
+      - node5:/node5
+      - node6:/node6
     networks: 
       - edge-nodes
-    command: ["-mode","init"]
+    command: ["-mode","init", "-num-nodes", "6"]
 ## GENERATE GENESIS
   genesis-ledge:
     image: 'trapesys/polygon-ledge'
@@ -23,10 +25,12 @@ services:
       - node2:/node2
       - node3:/node3
       - node4:/node4
+      - node5:/node5
+      - node6:/node6
       - genesis:/genesis
     networks: 
       - edge-nodes
-    command: ["-mode","genesis"]
+    command: ["-mode","genesis", "-num-nodes", "6"]
     depends_on: 
       - "init-ledge"
   
@@ -87,6 +91,32 @@ services:
     command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
     depends_on: 
       - "genesis-ledge"
+  node5:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - node5:/data
+      - genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10004:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
+  node6:
+    image: '0xpolygon/polygon-edge'
+    restart: on-failure
+    volumes:
+      - node6:/data
+      - genesis:/genesis
+    networks: 
+      - edge-nodes
+    # ports:
+    #   - 10004:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478"]
+    depends_on: 
+      - "genesis-ledge"
   
   proxy:
     image: 'nginx:alpine'
@@ -106,4 +136,6 @@ volumes:
   node2:
   node3:
   node4:
+  node5:
+  node6:
   genesis:
