@@ -19,3 +19,7 @@ Folder names inside nodes-data directory corespond to container names.
 There is no proxy container for JSON-RPC in this docker-compose.  
 This means that all JSON-RPC endpoints are exposed on port 1000 + node number.   
 For example: `node1` json-rpc can be accessed via `10001` port, `node2` via `10002` port and so on.
+
+## Logs
+All server logs are placed in nodes data folder and they will be accessible in `nodes-data/<node>` folder.    
+For example: location of log file for `node1` is located in `nodes-data/node1/node1.log`, for `node2` in `nodes-data/node2/node2.log` and so on.   
