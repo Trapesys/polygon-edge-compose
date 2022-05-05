@@ -36,6 +36,14 @@ For example, if we would like to set chain name the command for `genesis-ledge` 
 To customize server command follow the cli commands [docs](https://edge-docs.polygon.technology/docs/get-started/cli-commands#server-flags).
 For every node, you can add additional arguments to the `command: ` field.
 
+### Number of nodes
+If you'd like to run more than default 4 nodes, the following rules must be applied:
+* `init-ledge` and `genesis-ledge` containers must run with `-num-nodes` parameter, defining the total number of nodes
+* the name of node data volume must match container name
+* no arbitrary container names are allowed, container name must start with node + the node number
+* the container and volume names must increment in steps of 1 ( node1, node2, etc. )
+* `init-ledge` and `genesis-ledge` must have data directories of all nodes, named as described above
+
 
 ### Proxy
 The additional container is nginx proxy with very basic config file, bind mounted for easy configuration.

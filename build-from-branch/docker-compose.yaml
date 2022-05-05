@@ -1,0 +1,160 @@
+version: "3.9"
+
+services:
+
+  # !!! node/folder names must follow the pattern root dir + node number
+
+  ## INIT DATA DIR
+  init-ledge:
+    image: 'trapesys/polygon-ledge'
+    volumes:
+      - ./nodes-data/node1:/node1
+      - ./nodes-data/node2:/node2
+      - ./nodes-data/node3:/node3
+      - ./nodes-data/node4:/node4
+      - ./nodes-data/node5:/node5
+      - ./nodes-data/node6:/node6
+      - ./nodes-data/node7:/node7
+      - ./nodes-data/node8:/node8
+    networks: 
+      - edge-nodes
+    command: ["-mode","init", "-num-nodes", "8"]
+## GENERATE GENESIS
+  genesis-ledge:
+    image: 'trapesys/polygon-ledge'
+    volumes:
+      - ./nodes-data/node1:/node1
+      - ./nodes-data/node2:/node2
+      - ./nodes-data/node3:/node3
+      - ./nodes-data/node4:/node4
+      - ./nodes-data/node5:/node5
+      - ./nodes-data/node6:/node6
+      - ./nodes-data/node7:/node7
+      - ./nodes-data/node8:/node8
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    command: ["-mode","genesis", "-num-nodes", "8"]
+    depends_on: 
+      - "init-ledge"
+  
+## RUN NODES
+## Nodes must have the same names as folders in init-legde and genesis-legde
+  node1:
+    # build the local image first using the docker-compose build command
+    image: local/polygon-edge
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node1:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10001:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478","--log-to", "data/node1.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node2:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node2:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10002:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node2.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node3:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node3:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10003:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node3.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node4:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node4:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10004:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node4.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node5:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node5:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10005:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node5.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node6:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node6:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10006:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node6.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node7:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node7:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10007:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node7.log"]
+    depends_on: 
+      - "genesis-ledge"
+
+  node8:
+    image: local/polygon-edge
+    restart: on-failure
+    volumes:
+      - ./nodes-data/node8:/data
+      - ./nodes-data/genesis:/genesis
+    networks: 
+      - edge-nodes
+    ports:
+      - 10008:8545
+    command: ["server", "--data-dir","data","--chain","genesis/genesis.json","--libp2p", "0.0.0.0:1478", "--log-to", "data/node8.log"]
+    depends_on: 
+      - "genesis-ledge"
+ 
+networks: 
+  edge-nodes:
